@@ -1,17 +1,17 @@
 log:
   path:
-    template: '(required)sample_log_template.md'
+    template: 'sample_log_template.md'
   format:
-    filename: '(required)%y%m%dDL.md'
-    title: '(required)%Y/%m/%d_DailyLog'
-  editor: '(required)code'
+    filename: '%y%m%dDL.md'
+    title: '%Y/%m/%d_DailyLog'
+  editor: 'code'
 slack:
-  webhook: '(optional)https://hooks.slack.com/services/1234567890/1234567890/abcdefghijklmnopqrstuvwxyz'
-  channel: '(optional)#your-channel'
-  username: '(optional)Tester'
-  icon: '(optional):robot_face:'
+  webhook: 'https://hooks.slack.com/services/1234567890/1234567890/abcdefghijklmnopqrstuvwxyz'
+  channel: '#your-channel'
+  username: 'Tester'
+  icon: ':robot_face:'
 esa:
-  team: '(optional)yourteam'
-  token: '(optional)abcdefghijklmnopqrstuvwxyz'
+  team: 'yourteam'
+  token: 'abcdefghijklmnopqrstuvwxyz'
   format:
-    postname: '(optional)DailyLog/%Y/%m/%d/your_name'
+    postname: 'DailyLog/%Y/%m/%d/your_name'
