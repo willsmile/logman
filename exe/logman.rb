@@ -1,0 +1,44 @@
+#! /usr/bin/env ruby
+# frozen_string_literal: true
+
+# (C) Wei Chen (willsmile)
+# MIT license
+
+require 'logman'
+require 'optparse'
+
+# default value
+@options = {}
+
+OptionParser.new do |opts|
+  opts.on('-g', '--generate', 'Generate a log') { |v| @options[:generate] = v }
+  opts.on('-o', '--open', 'Open generated log') { |v| @options[:open] = v }
+  opts.on('-a', '--archive', 'Archive generated logs') { |v| @options[:archive] = v }
+  opts.on('-u', '--upload', 'Upload archived logs to repo') { |v| @options[:upload] = v }
+  opts.on('-e', '--esa', 'Post a log to esa') { |v| @options[:esa] = v }
+  opts.on('-s', '--slack', 'Post a log to slack') { |v| @options[:slack] = v }
+  opts.on('-v', '--version', 'Show tool version') { |v| @options[:version] = v }
+  
+  opts.parse!(ARGV)
+end
+
+log = Logman::LogObject.new
+
+@options.each do |k, v|
+  case k
+  when :generate
+    log.generate
+  when :open
+    log.open
+  when :archive
+    Logman::Logfiles.archive
+  when :upload
+    Logman::Logfiles.upload
+  when :esa
+    Logman::Post.esa(log)
+  when :slack
+    Logman::Post.slack(log)
+  else
+    Logman.version
+  end
+end
