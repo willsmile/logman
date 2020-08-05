@@ -1,6 +1,6 @@
 log:
   path:
-    template: '~/.logman/sample_log_template.md'
+    template: '/home/circleci/.logman/sample_log_template.md'
   format:
     filename: '%y%m%dDL.md'
     title: '%Y/%m/%d_DailyLog'
