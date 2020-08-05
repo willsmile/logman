@@ -1,0 +1,17 @@
+log:
+  path:
+    template: '/home/circleci/.logman/log_template.md'
+  format:
+    filename: '%y%m%dDL.md'
+    title: '%Y/%m/%d_DailyLog'
+  editor: 'code'
+slack:
+  webhook: 'https://hooks.slack.com/services/1234567890/1234567890/abcdefghijklmnopqrstuvwxyz'
+  channel: '#your-channel'
+  username: 'Tester'
+  icon: ':robot_face:'
+esa:
+  team: 'yourteam'
+  token: 'abcdefghijklmnopqrstuvwxyz'
+  format:
+    postname: 'DailyLog/%Y/%m/%d/your_name'

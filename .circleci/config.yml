@@ -1,0 +1,56 @@
+version: 2.1
+ 
+executors:
+  default:
+    docker:
+      - image: circleci/ruby:2.6.6
+        environment:
+          BUNDLER_VERSION: 1.17.3
+          BUNDLE_PATH: vendor/bundle
+          LOGMANPATH: /home/circleci/.logman
+commands:
+  setup_bundle:
+    description: "Setup bundle with caches"
+    steps:
+      - restore_cache:
+          keys:
+            - v1-bundle-{{ arch }}-{{ checksum "Gemfile.lock" }}
+            - v1-bundle-{{ arch }}-
+      - run: 
+          name: Bundle install dependencies
+          command: bundle install --path vendor/bundle --jobs=4
+      - save_cache:
+          key: v1-bundle-{{ arch }}-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+  config_logman:
+    description: "Setup config for logman"
+    steps:
+      - run: mkdir $LOGMANPATH
+      - run: cp ci_resources/config.yml $LOGMANPATH/
+      - run: cp ci_resources/log_template.md $LOGMANPATH/
+workflows:
+  version: 2
+  build-and-test:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+jobs: 
+  build:
+    executor:
+      name: default
+    steps:
+      - checkout
+      - setup_bundle
+  test:
+    executor:
+      name: default
+    steps:
+      - checkout
+      - setup_bundle
+      - config_logman
+      - run: 
+          name: Run rspec tests
+          command: bundle exec rspec spec
