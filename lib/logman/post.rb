@@ -14,7 +14,7 @@ module Logman
       body_md = log_body(filename) << message
 
       client = Esa::Client.new(access_token: Logman.config.esa.token, current_team: Logman.config.esa.team)
-      response = client.create_post(name: name, body_md: body_md)
+      response = client.create_post(name: postname, body_md: body_md)
 
       id = response.body["number"]
       if response.status == 201 && Integer === id
