@@ -2,9 +2,9 @@
 
 require 'logman/config'
 require 'logman/log_object'
-require 'logman/logfiles'
 require 'logman/post'
 require 'logman/version'
+require 'plugins/logfiles'
 
 module Logman
   def self.config

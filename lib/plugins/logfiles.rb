@@ -2,7 +2,7 @@
 
 require 'fileutils'
 
-module Logman
+module Plugins
   module Logfiles
     def self.archive
       mydir = Dir.pwd
