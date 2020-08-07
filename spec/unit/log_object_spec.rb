@@ -10,9 +10,9 @@ RSpec.describe Logman::LogObject do
     let(:format) { "%y%m%dDL.md" }
     let(:filename) { Date.today.strftime(format) }
 
-    context 'same name log file does not exist' do
+    context 'same name logfile does not exist' do
       before do
-        FileUtils.rm_f(filename) if File.exist?(filename)
+        FileUtils.rm_f(filename)
       end
       it 'should return a success message' do
         log = Logman::LogObject.new()
@@ -20,12 +20,12 @@ RSpec.describe Logman::LogObject do
       end
     end
 
-    context 'same name log file exists' do
+    context 'same name logfile exists' do
       before do
-        FileUtils.touch(filename) if File.exist?(filename)
+        FileUtils.touch(filename)
       end
       after do
-        FileUtils.rm_f(filename) if File.exist?(filename)
+        FileUtils.rm_f(filename)
       end
       it 'should return a fail message' do
         log = Logman::LogObject.new()
