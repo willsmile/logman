@@ -13,16 +13,17 @@ module Logman
       message = "\n post by Logman v#{Logman::VERSION}"
       body_md = log_body(filename) << message
 
-      client = Esa::Client.new(access_token: Logman.config.esa.token, current_team: Logman.config.esa.team)
-      response = client.create_post(name: postname, body_md: body_md)
+      response = esa_client.create_post(name: postname, body_md: body_md)
 
-      id = response.body["number"]
+      id = response.body["number"] unless response.body.nil?
       if response.status == 201 && Integer === id
-        if client.update_post(id, wip: false)
+        if esa_client.update_post(id, wip: false)
           puts "Post logfile #{filename} to esa successful."
         else
           puts "Post logfile #{filename} to esa unsuccessful."
         end
+      else
+        STDERR.puts 'Cannot connect to esa.'
       end
     end
 
@@ -34,15 +35,21 @@ module Logman
       body_md.insert(0, '```')
       body_md.insert(-1, '```')
 
-      notifier = Slack::Notifier.new(Logman.config.slack.webhook) do
-        defaults channel: Logman.config.slack.channel,
-                 username: Logman.config.slack.username
-      end
-
-      if notifier.post text: body_md, icon_emoji: Logman.config.slack.icon
+      if slack_notifier.post text: body_md, icon_emoji: Logman.config.slack.icon
         puts "Post logfile #{filename} to slack successful."
       else
         puts "Post logfile #{filename} to slack unsuccessful."
+      end
+    end
+
+    def self.esa_client
+      Esa::Client.new(access_token: Logman.config.esa.token, current_team: Logman.config.esa.team)
+    end
+
+    def self.slack_notifier
+      Slack::Notifier.new(Logman.config.slack.webhook) do
+        defaults channel: Logman.config.slack.channel,
+                 username: Logman.config.slack.username
       end
     end
 
