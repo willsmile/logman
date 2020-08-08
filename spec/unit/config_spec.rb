@@ -13,7 +13,7 @@ RSpec.describe Logman::Config do
         expect(File.exist?(config_path)).to be true
       end
       it 'should load config successfully' do
-        config = Logman::Config.load(config_path)
+        config = Logman::Config.new(path: config_path).load
         expect(config.keys.size).to be > 0
       end
     end
@@ -26,7 +26,7 @@ RSpec.describe Logman::Config do
         expect(File.exist?(config_path)).to be true
       end
       it 'should load config successfully' do
-        config = Logman::Config.load(config_path)
+        config = Logman::Config.new(path: config_path).load
         expect(config.keys.size).to be 0
       end
     end
@@ -39,7 +39,7 @@ RSpec.describe Logman::Config do
         expect(File.exist?(config_path)).to be false
       end
       it 'should load config unsuccessfully' do
-        expect{ Logman::Config.load(config_path) }.to output("Please use a valid config path.\n").to_stderr_from_any_process
+        expect{ Logman::Config.new(path: config_path).load }.to output("Please use a valid config path.\n").to_stderr_from_any_process
       end
     end
   end

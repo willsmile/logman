@@ -8,6 +8,6 @@ require 'plugins/logfiles'
 
 module Logman
   def self.config
-    Logman::Config.load
+    Logman::Config.new.load
   end
 end
