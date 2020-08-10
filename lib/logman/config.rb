@@ -4,11 +4,8 @@ require 'hashie'
 
 module Logman
   class Config
-    LOGMANPATH = ENV.fetch("LOGMANPATH")
-    CONFIG_FILENAME = 'config.yml'
-
-    def initialize(path: nil)
-      @path = path || LOGMANPATH + '/' + CONFIG_FILENAME
+    def initialize(path)
+      @path = path
     end
 
     def load
