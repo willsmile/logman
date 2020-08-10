@@ -5,10 +5,8 @@ require 'fileutils'
 
 module Logman
   class LogObject
-    def initialize(template_path = nil, filename_format = nil, title_format = nil)
-      @template_path = template_path
-      @filename_format = filename_format
-      @title_format = title_format
+    def initialize(config)
+      @config = config
     end
 
     def generate
@@ -43,22 +41,14 @@ module Logman
     end
 
     def valid_template
-      file = if @template_path.nil?
-                Logman.config.log.path.template
-              else
-                @template_path
-              end
+      file = @config.log.path.template
       STDERR.puts 'Please use a valid template path.' unless File.exist?(file)
 
       file
     end
 
     def valid_filename
-      format = if @filename_format.nil?
-                  Logman.config.log.format.filename
-                else
-                  @filename_format
-                end
+      format = @config.log.format.filename
       filename = Date.today.strftime(format)
       STDERR.puts 'Please use a valid format for filename.' unless filename.size > 0
 
@@ -66,11 +56,7 @@ module Logman
     end
 
     def valid_title
-      format = if @title_format.nil?
-                  Logman.config.log.format.title
-                else
-                  @title_format
-                end
+      format = @config.log.format.title
       title = Date.today.strftime(format)
       STDERR.puts 'Please use a valid format for title.' unless title.size > 0
 
@@ -78,7 +64,7 @@ module Logman
     end
 
     def valid_editor
-      editor = Logman.config.log.editor
+      editor = @config.log.editor
       STDERR.puts 'Please set an editor to open log file.' if editor.nil?
 
       editor
