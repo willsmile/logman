@@ -7,10 +7,15 @@
 require 'logman'
 require 'optparse'
 
+LOGMANPATH = ENV.fetch("LOGMANPATH")
+CONFIG_FILENAME = 'config.yml'
+
 # default value
+config_path = LOGMANPATH + '/' + CONFIG_FILENAME
 @options = {}
 
 OptionParser.new do |opts|
+  opts.on('-c', '--config', 'Use a config file') { |v| config_path = v }
   opts.on('-g', '--generate', 'Generate a log') { |v| @options[:generate] = v }
   opts.on('-o', '--open', 'Open generated log') { |v| @options[:open] = v }
   opts.on('-a', '--archive', 'Archive generated logs') { |v| @options[:archive] = v }
@@ -18,11 +23,13 @@ OptionParser.new do |opts|
   opts.on('-e', '--esa', 'Post a log to esa') { |v| @options[:esa] = v }
   opts.on('-s', '--slack', 'Post a log to slack') { |v| @options[:slack] = v }
   opts.on('-v', '--version', 'Show tool version') { |v| @options[:version] = v }
-  
+
   opts.parse!(ARGV)
 end
 
-log = Logman::LogObject.new
+config = Logman::Config.new(config_path).load
+log = Logman::LogObject.new(config)
+post = Logman::Post.new(config)
 
 @options.each do |k, v|
   case k
@@ -31,9 +38,9 @@ log = Logman::LogObject.new
   when :open
     log.open
   when :esa
-    Logman::Post.esa(log)
+    post.esa(log)
   when :slack
-    Logman::Post.slack(log)
+    post.slack(log)
   when :archive
     Plugins::Logfiles.archive
   when :upload
