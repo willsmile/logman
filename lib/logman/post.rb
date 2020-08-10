@@ -51,10 +51,8 @@ module Logman
     end
 
     def slack_notifier
-      Slack::Notifier.new(@config.slack.webhook) do
-        defaults channel: @config.slack.channel,
-                 username: @config.slack.username
-      end
+      Slack::Notifier.new @config.slack.webhook, channel: @config.slack.channel,
+                                                 username: @config.slack.username
     end
 
     def log_body(filename)
