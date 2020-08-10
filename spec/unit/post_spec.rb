@@ -4,6 +4,8 @@ RSpec.describe Logman::Post do
   let(:today) { Date.new(2019, 0o4, 0o1) }
   let(:format) { "%y%m%dDL.md" }
   let(:filename) { Date.today.strftime(format) }
+  let(:config_path) { ENV['LOGMANPATH'] + '/' + 'config.yml' }
+  let(:config) { Logman::Config.new(config_path).load }
 
   before do
     allow(Date).to receive(:today).and_return(today)
@@ -23,10 +25,11 @@ RSpec.describe Logman::Post do
         mock_esa_client = double('Esa Client')
         allow(mock_esa_client).to receive(:create_post).and_return(response)
         allow(mock_esa_client).to receive(:update_post).and_return(true)
-        allow(Logman::Post).to receive(:esa_client).and_return(mock_esa_client)
 
-        log = Logman::LogObject.new
-        expect { Logman::Post.esa(log) }.to output("Post logfile #{filename} to esa successful.\n").to_stdout
+        log = Logman::LogObject.new(config)
+        post = Logman::Post.new(config)
+        allow(post).to receive(:esa_client).and_return(mock_esa_client)
+        expect { post.esa(log) }.to output("Post logfile #{filename} to esa successful.\n").to_stdout
       end
 
       it 'should return a unsuccessful message when esa response is valid but update post failed' do
@@ -34,10 +37,11 @@ RSpec.describe Logman::Post do
         mock_esa_client = double('Esa Client')
         allow(mock_esa_client).to receive(:create_post).and_return(response)
         allow(mock_esa_client).to receive(:update_post).and_return(false)
-        allow(Logman::Post).to receive(:esa_client).and_return(mock_esa_client)
 
-        log = Logman::LogObject.new
-        expect { Logman::Post.esa(log) }.to output("Post logfile #{filename} to esa unsuccessful.\n").to_stdout
+        log = Logman::LogObject.new(config)
+        post = Logman::Post.new(config)
+        allow(post).to receive(:esa_client).and_return(mock_esa_client)
+        expect { post.esa(log) }.to output("Post logfile #{filename} to esa unsuccessful.\n").to_stdout
       end
 
       it 'should return an error message when esa response is invalid' do
@@ -45,10 +49,11 @@ RSpec.describe Logman::Post do
         mock_esa_client = double('Esa Client')
         allow(mock_esa_client).to receive(:create_post).and_return(response)
         allow(mock_esa_client).to receive(:update_post).and_return(false)
-        allow(Logman::Post).to receive(:esa_client).and_return(mock_esa_client)
 
-        log = Logman::LogObject.new
-        expect { Logman::Post.esa(log) }.to output("Cannot connect to esa.\n").to_stderr_from_any_process
+        log = Logman::LogObject.new(config)
+        post = Logman::Post.new(config)
+        allow(post).to receive(:esa_client).and_return(mock_esa_client)
+        expect { post.esa(log) }.to output("Cannot connect to esa.\n").to_stderr_from_any_process
       end
     end
 
@@ -58,8 +63,9 @@ RSpec.describe Logman::Post do
       end
 
       it 'should return an error message' do
-        log = Logman::LogObject.new
-        expect { Logman::Post.esa(log) }.to raise_error(Errno::ENOENT)
+        log = Logman::LogObject.new(config)
+        post = Logman::Post.new(config)
+        expect { post.esa(log) }.to raise_error(Errno::ENOENT)
       end
     end
   end
@@ -76,19 +82,21 @@ RSpec.describe Logman::Post do
       it 'should return a successful message when slack response is valid' do
         mock_slack_notifier = double('Slack Notifier')
         allow(mock_slack_notifier).to receive(:post).and_return(true)
-        allow(Logman::Post).to receive(:slack_notifier).and_return(mock_slack_notifier)
 
-        log = Logman::LogObject.new
-        expect { Logman::Post.slack(log) }.to output("Post logfile #{filename} to slack successful.\n").to_stdout
+        log = Logman::LogObject.new(config)
+        post = Logman::Post.new(config)
+        allow(post).to receive(:slack_notifier).and_return(mock_slack_notifier)
+        expect { post.slack(log) }.to output("Post logfile #{filename} to slack successful.\n").to_stdout
       end
 
       it 'should return a unsuccessful message when slack response is invalid' do
         mock_slack_notifier = double('Slack Notifier')
         allow(mock_slack_notifier).to receive(:post).and_return(false)
-        allow(Logman::Post).to receive(:slack_notifier).and_return(mock_slack_notifier)
 
-        log = Logman::LogObject.new
-        expect { Logman::Post.slack(log) }.to output("Post logfile #{filename} to slack unsuccessful.\n").to_stdout
+        log = Logman::LogObject.new(config)
+        post = Logman::Post.new(config)
+        allow(post).to receive(:slack_notifier).and_return(mock_slack_notifier)
+        expect { post.slack(log) }.to output("Post logfile #{filename} to slack unsuccessful.\n").to_stdout
       end
     end
     
@@ -98,8 +106,9 @@ RSpec.describe Logman::Post do
       end
 
       it 'should return an error message' do
-        log = Logman::LogObject.new
-        expect { Logman::Post.slack(log) }.to raise_error(Errno::ENOENT)
+        log = Logman::LogObject.new(config)
+        post = Logman::Post.new(config)
+        expect { post.slack(log) }.to raise_error(Errno::ENOENT)
       end
     end
   end
