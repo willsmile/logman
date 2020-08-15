@@ -8,4 +8,5 @@ require 'plugins/logfiles'
 
 module Logman
   class OperationError < StandardError; end
+  class ValidationError < StandardError; end
 end

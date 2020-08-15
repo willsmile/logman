@@ -42,7 +42,7 @@ module Logman
 
     def valid_template
       file = @config.log.path.template
-      raise OperationError.new("Please use a valid template path.") unless File.exist?(file)
+      raise ValidationError.new("Please use a valid template path.") unless File.exist?(file)
 
       file
     end
@@ -50,7 +50,7 @@ module Logman
     def valid_filename
       format = @config.log.format.filename
       filename = Date.today.strftime(format)
-      raise OperationError.new("Please use a valid format for filename.") unless filename.size > 0
+      raise ValidationError.new("Please use a valid format for filename.") unless filename.size > 0
 
       filename
     end
@@ -58,14 +58,14 @@ module Logman
     def valid_title
       format = @config.log.format.title
       title = Date.today.strftime(format)
-      raise OperationError.new("Please use a valid format for title.") unless title.size > 0
+      raise ValidationError.new("Please use a valid format for title.") unless title.size > 0
 
       title
     end
 
     def valid_editor
       editor = @config.log.editor
-      raise OperationError.new("Please set an editor to open log file.") if editor.nil?
+      raise ValidationError.new("Please set an editor to open log file.") if editor.nil?
 
       editor
     end
