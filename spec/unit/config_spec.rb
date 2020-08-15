@@ -39,7 +39,7 @@ RSpec.describe Logman::Config do
         expect(File.exist?(config_path)).to be false
       end
       it 'should load config unsuccessfully' do
-        expect{ Logman::Config.new(config_path).load }.to output("Please use a valid config path.\n").to_stderr_from_any_process
+        expect{ Logman::Config.new(config_path).load }.to raise_error Logman::ValidationError, "Please use a valid config path."
       end
     end
   end
