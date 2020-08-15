@@ -20,12 +20,12 @@ module Logman
       lines = [title + "\n"] + lines
 
       if File.exist?(filename)
-        puts('Log file exists.')
+        raise OperationError.new("Logfile exists.")
       else
         log_file = File.new(filename, 'w')
         lines.each { |line| log_file.write line }
         log_file.close
-        puts('Log file generation successed.')
+        puts('Logfile generation successed.')
       end
     end
 
@@ -36,13 +36,13 @@ module Logman
       if File.exist?(filename)
         system(editor, filename)
       else
-        puts('Log file does not exist.')
+        raise OperationError.new("Logfile does not exist.")
       end
     end
 
     def valid_template
       file = @config.log.path.template
-      STDERR.puts 'Please use a valid template path.' unless File.exist?(file)
+      raise OperationError.new("Please use a valid template path.") unless File.exist?(file)
 
       file
     end
@@ -50,7 +50,7 @@ module Logman
     def valid_filename
       format = @config.log.format.filename
       filename = Date.today.strftime(format)
-      STDERR.puts 'Please use a valid format for filename.' unless filename.size > 0
+      raise OperationError.new("Please use a valid format for filename.") unless filename.size > 0
 
       filename
     end
@@ -58,14 +58,14 @@ module Logman
     def valid_title
       format = @config.log.format.title
       title = Date.today.strftime(format)
-      STDERR.puts 'Please use a valid format for title.' unless title.size > 0
+      raise OperationError.new("Please use a valid format for title.") unless title.size > 0
 
       title
     end
 
     def valid_editor
       editor = @config.log.editor
-      STDERR.puts 'Please set an editor to open log file.' if editor.nil?
+      raise OperationError.new("Please set an editor to open log file.") if editor.nil?
 
       editor
     end

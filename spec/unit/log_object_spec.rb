@@ -19,7 +19,7 @@ RSpec.describe Logman::LogObject do
       end
       it 'should return a success message' do
         log = Logman::LogObject.new(config)
-        expect { log.generate }.to output("Log file generation successed.\n").to_stdout
+        expect { log.generate }.to output("Logfile generation successed.\n").to_stdout
       end
     end
 
@@ -32,7 +32,7 @@ RSpec.describe Logman::LogObject do
       end
       it 'should return a fail message' do
         log = Logman::LogObject.new(config)
-        expect { log.generate }.to output("Log file exists.\n").to_stdout
+        expect { log.generate }.to raise_error Logman::OperationError, "Logfile exists."
       end
     end
   end
