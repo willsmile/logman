@@ -24,10 +24,10 @@ module Logman
         if esa_client.update_post(id, wip: false)
           puts "Post logfile #{filename} to esa successful."
         else
-          puts "Post logfile #{filename} to esa unsuccessful."
+          raise OperationError.new("Post logfile #{filename} to esa unsuccessful.")
         end
       else
-        STDERR.puts 'Cannot connect to esa.'
+        raise OperationError.new("Post logfile #{filename} to esa unsuccessful.")
       end
     end
 
@@ -42,7 +42,7 @@ module Logman
       if slack_notifier.post text: body_md, icon_emoji: @config.slack.icon
         puts "Post logfile #{filename} to slack successful."
       else
-        puts "Post logfile #{filename} to slack unsuccessful."
+        raise OperationError.new("Post logfile #{filename} to slack unsuccessful.")
       end
     end
 
@@ -57,7 +57,7 @@ module Logman
 
     def log_body(filename)
       unless File.exist?(filename)
-        raise Errno::ENOENT, "Logfile #{filename} does not exist."
+        raise OperationError.new("Logfile does not exist.")
       end
 
       file = File.open(filename, 'r+')

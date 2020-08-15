@@ -41,7 +41,7 @@ RSpec.describe Logman::Post do
         log = Logman::LogObject.new(config)
         post = Logman::Post.new(config)
         allow(post).to receive(:esa_client).and_return(mock_esa_client)
-        expect { post.esa(log) }.to output("Post logfile #{filename} to esa unsuccessful.\n").to_stdout
+        expect { post.esa(log) }.to raise_error Logman::OperationError, "Post logfile #{filename} to esa unsuccessful."
       end
 
       it 'should return an error message when esa response is invalid' do
@@ -53,7 +53,7 @@ RSpec.describe Logman::Post do
         log = Logman::LogObject.new(config)
         post = Logman::Post.new(config)
         allow(post).to receive(:esa_client).and_return(mock_esa_client)
-        expect { post.esa(log) }.to output("Cannot connect to esa.\n").to_stderr_from_any_process
+        expect { post.esa(log) }.to raise_error Logman::OperationError, "Post logfile #{filename} to esa unsuccessful."
       end
     end
 
@@ -65,7 +65,7 @@ RSpec.describe Logman::Post do
       it 'should return an error message' do
         log = Logman::LogObject.new(config)
         post = Logman::Post.new(config)
-        expect { post.esa(log) }.to raise_error(Errno::ENOENT)
+        expect { post.esa(log) }.to raise_error Logman::OperationError, "Logfile does not exist."
       end
     end
   end
@@ -96,7 +96,7 @@ RSpec.describe Logman::Post do
         log = Logman::LogObject.new(config)
         post = Logman::Post.new(config)
         allow(post).to receive(:slack_notifier).and_return(mock_slack_notifier)
-        expect { post.slack(log) }.to output("Post logfile #{filename} to slack unsuccessful.\n").to_stdout
+        expect { post.slack(log) }.to raise_error Logman::OperationError, "Post logfile #{filename} to slack unsuccessful."
       end
     end
     
@@ -108,7 +108,7 @@ RSpec.describe Logman::Post do
       it 'should return an error message' do
         log = Logman::LogObject.new(config)
         post = Logman::Post.new(config)
-        expect { post.slack(log) }.to raise_error(Errno::ENOENT)
+        expect { post.slack(log) }.to raise_error Logman::OperationError, "Logfile does not exist."
       end
     end
   end
