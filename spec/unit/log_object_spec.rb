@@ -2,7 +2,7 @@
 
 RSpec.describe Logman::LogObject do
   let(:config_path) { ENV['LOGMANPATH'] + '/' + 'config.yml' }
-  let(:config) { Logman::Config.new(config_path).load }
+  let(:config) { Logman::Config.new(config_path) }
 
   before do
     allow(Date).to receive(:today).and_return(today)
