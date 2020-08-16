@@ -10,9 +10,11 @@ module Logman
     end
 
     def generate
-      template = valid_template
-      filename = valid_filename
-      title = valid_title
+      @config.validate_template_path!
+      @config.validate_title_format!
+
+      template = @config.template_path
+      title = parser(@config.title_format)
 
       temp_file = File.open(template, 'r+')
       lines = temp_file.readlines
@@ -30,9 +32,9 @@ module Logman
     end
 
     def open
-      filename = valid_filename
-      editor = valid_editor
-      
+      @config.validate_editor!
+      editor = @config.editor
+
       if File.exist?(filename)
         system(editor, filename)
       else
@@ -40,34 +42,13 @@ module Logman
       end
     end
 
-    def valid_template
-      file = @config.log.path.template
-      raise ValidationError.new("Please use a valid template path.") unless File.exist?(file)
-
-      file
+    def filename
+      @config.validate_filename_format!
+      parser(@config.filename_format)
     end
 
-    def valid_filename
-      format = @config.log.format.filename
-      filename = Date.today.strftime(format)
-      raise ValidationError.new("Please use a valid format for filename.") unless filename.size > 0
-
-      filename
-    end
-
-    def valid_title
-      format = @config.log.format.title
-      title = Date.today.strftime(format)
-      raise ValidationError.new("Please use a valid format for title.") unless title.size > 0
-
-      title
-    end
-
-    def valid_editor
-      editor = @config.log.editor
-      raise ValidationError.new("Please set an editor to open log file.") if editor.nil?
-
-      editor
+    def parser(format)
+      Date.today.strftime(format)
     end
   end
 end
