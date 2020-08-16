@@ -27,7 +27,7 @@ OptionParser.new do |opts|
   opts.parse!(ARGV)
 end
 
-config = Logman::Config.new(config_path).load
+config = Logman::Config.new(config_path)
 log = Logman::LogObject.new(config)
 post = Logman::Post.new(config)
 
