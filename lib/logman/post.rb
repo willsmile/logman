@@ -11,8 +11,10 @@ module Logman
     end
 
     def esa(log_object)
-      filename = log_object.valid_filename
-      postname = Date.today.strftime(@config.esa.format.postname)
+      @config.validate_esa_postname_format!
+
+      filename = log_object.filename
+      postname = Date.today.strftime(@config.esa_postname_format)
 
       message = "\n post by Logman v#{Logman::VERSION}"
       body_md = log_body(filename) << message
@@ -32,14 +34,16 @@ module Logman
     end
 
     def slack(log_object)
-      filename = log_object.valid_filename
+      @config.validate_slack_icon!
+
+      filename = log_object.filename
 
       message = "\n post by Logman v#{Logman::VERSION}"
       body_md = log_body(filename) << message
       body_md.insert(0, '```')
       body_md.insert(-1, '```')
 
-      if slack_notifier.post text: body_md, icon_emoji: @config.slack.icon
+      if slack_notifier.post text: body_md, icon_emoji: @config.slack_icon
         puts "Post logfile #{filename} to slack successful."
       else
         raise OperationError.new("Post logfile #{filename} to slack unsuccessful.")
@@ -47,12 +51,19 @@ module Logman
     end
 
     def esa_client
-      Esa::Client.new(access_token: @config.esa.token, current_team: @config.esa.team)
+      @config.validate_esa_token!
+      @config.validate_esa_team!
+
+      Esa::Client.new(access_token: @config.esa_token, current_team: @config.esa_team)
     end
 
     def slack_notifier
-      Slack::Notifier.new @config.slack.webhook, channel: @config.slack.channel,
-                                                 username: @config.slack.username
+      @config.validate_slack_webhook!
+      @config.validate_slack_channel!
+      @config.validate_slack_username!
+
+      Slack::Notifier.new @config.slack_webhook, channel: @config.slack_channel,
+                                                 username: @config.slack_username
     end
 
     def log_body(filename)
