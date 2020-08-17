@@ -49,7 +49,7 @@ module Logman
     end
 
     def esa_team
-      load.eas.team
+      load.esa.team
     end
 
     def esa_token
