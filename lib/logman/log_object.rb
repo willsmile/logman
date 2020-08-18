@@ -10,8 +10,8 @@ module Logman
     end
 
     def generate
-      template = @config.template_path
-      title = parser(@config.title_format)
+      template = @config.log_path_template
+      title = parser(@config.log_format_title)
 
       temp_file = File.open(template, 'r+')
       lines = temp_file.readlines
@@ -29,7 +29,7 @@ module Logman
     end
 
     def open
-      editor = @config.editor
+      editor = @config.log_editor
 
       if File.exist?(filename)
         system(editor, filename)
@@ -39,7 +39,7 @@ module Logman
     end
 
     def filename
-      parser(@config.filename_format)
+      parser(@config.log_format_filename)
     end
 
     def parser(format)

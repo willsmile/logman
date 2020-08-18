@@ -12,7 +12,7 @@ module Logman
 
     def esa(log_object)
       filename = log_object.filename
-      postname = Date.today.strftime(@config.esa_postname_format)
+      postname = Date.today.strftime(@config.esa_format_postname)
 
       message = "\n post by Logman v#{Logman::VERSION}"
       body_md = log_body(filename) << message
