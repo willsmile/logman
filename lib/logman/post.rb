@@ -11,8 +11,6 @@ module Logman
     end
 
     def esa(log_object)
-      @config.validate_esa_postname_format!
-
       filename = log_object.filename
       postname = Date.today.strftime(@config.esa_postname_format)
 
@@ -34,8 +32,6 @@ module Logman
     end
 
     def slack(log_object)
-      @config.validate_slack_icon!
-
       filename = log_object.filename
 
       message = "\n post by Logman v#{Logman::VERSION}"
@@ -51,17 +47,10 @@ module Logman
     end
 
     def esa_client
-      @config.validate_esa_token!
-      @config.validate_esa_team!
-
       Esa::Client.new(access_token: @config.esa_token, current_team: @config.esa_team)
     end
 
     def slack_notifier
-      @config.validate_slack_webhook!
-      @config.validate_slack_channel!
-      @config.validate_slack_username!
-
       Slack::Notifier.new @config.slack_webhook, channel: @config.slack_channel,
                                                  username: @config.slack_username
     end

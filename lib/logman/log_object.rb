@@ -10,9 +10,6 @@ module Logman
     end
 
     def generate
-      @config.validate_template_path!
-      @config.validate_title_format!
-
       template = @config.template_path
       title = parser(@config.title_format)
 
@@ -32,7 +29,6 @@ module Logman
     end
 
     def open
-      @config.validate_editor!
       editor = @config.editor
 
       if File.exist?(filename)
@@ -43,7 +39,6 @@ module Logman
     end
 
     def filename
-      @config.validate_filename_format!
       parser(@config.filename_format)
     end
 
