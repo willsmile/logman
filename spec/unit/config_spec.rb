@@ -6,7 +6,7 @@ RSpec.describe Logman::Config do
     let(:config_path) { logman_path + '/' + config_filename }
 
     context 'use an available config file' do
-      let(:logman_path) { ENV['LOGMANPATH'] }
+      let(:logman_path) { CONFIG_FIXTURES_PATH }
       let(:config_filename) { 'config.yml' }
 
       it 'config file exists' do
@@ -19,7 +19,7 @@ RSpec.describe Logman::Config do
     end
 
     context 'use an empty config file' do
-      let(:logman_path) { ENV['LOGMANPATH'] }
+      let(:logman_path) { CONFIG_FIXTURES_PATH }
       let(:config_filename) { 'empty_config.yml' }
 
       it 'config file exists' do
@@ -32,7 +32,7 @@ RSpec.describe Logman::Config do
     end
 
     context 'use a non-exist config file' do
-      let(:logman_path) { ENV['LOGMANPATH'] }
+      let(:logman_path) { CONFIG_FIXTURES_PATH }
       let(:config_filename) { 'non_exist_config.yml' }
 
       it 'config file does not exist' do
