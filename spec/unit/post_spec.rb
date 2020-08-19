@@ -4,7 +4,7 @@ RSpec.describe Logman::Post do
   let(:today) { Date.new(2019, 0o4, 0o1) }
   let(:format) { "%y%m%dDL.md" }
   let(:filename) { Date.today.strftime(format) }
-  let(:config_path) { ENV['LOGMANPATH'] + '/' + 'config.yml' }
+  let(:config_path) { CONFIG_FIXTURES_PATH + '/' + 'config.yml' }
   let(:config) { Logman::Config.new(config_path) }
 
   before do

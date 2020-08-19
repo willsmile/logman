@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe Logman::LogObject do
-  let(:config_path) { ENV['LOGMANPATH'] + '/' + 'config.yml' }
+  let(:template_path) { TEMPLATE_FIXTURES_PATH + '/' + 'log_template.md' }
+  let(:config_path) { CONFIG_FIXTURES_PATH + '/' + 'config.yml' }
   let(:config) { Logman::Config.new(config_path) }
 
   before do
     allow(Date).to receive(:today).and_return(today)
+    allow(config).to receive(:log_path_template).and_return(template_path)
   end
 
   describe '#generate' do
