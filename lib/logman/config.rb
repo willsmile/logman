@@ -22,7 +22,7 @@ module Logman
       @path = path
     end
 
-    def load
+    def load!
       begin
         Hashie::Mash.load(@path)
       rescue ArgumentError
@@ -32,7 +32,7 @@ module Logman
 
     PROPERTY_FACTORY.each do |property|
       define_method "#{property}" do
-        val = eval("load.#{dot_syntax_of(property)}")
+        val = eval("load!.#{dot_syntax_of(property)}")
         raise ValidationError.new("Please setup the #{speech_syntax_of(property)} in config file.") if val.nil?
         val
       end
