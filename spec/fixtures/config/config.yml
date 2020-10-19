@@ -15,3 +15,16 @@ esa:
   token: 'abcdefghijklmnopqrstuvwxyz'
   format:
     postname: 'DailyLog/%Y/%m/%d/your_name'
+plugins:
+  empty-plugin:
+    description: 'empty plugin'
+    command: ''
+  invalid-plugin:
+    description: 'invalid plugin'
+    command: 'iaminvalid'
+  valid-but-error-plugin:
+    description: 'valid plugin'
+    command: 'ruby -e "exit(false)"'
+  valid-plugin:
+    description: 'valid plugin'
+    command: 'echo valid plugin'
