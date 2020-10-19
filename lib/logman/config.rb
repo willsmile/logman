@@ -22,7 +22,7 @@ module Logman
       @path = path
     end
 
-    def load
+    def load!
       begin
         Hashie::Mash.load(@path)
       rescue ArgumentError
@@ -32,10 +32,17 @@ module Logman
 
     PROPERTY_FACTORY.each do |property|
       define_method "#{property}" do
-        val = eval("load.#{dot_syntax_of(property)}")
+        val = eval("load!.#{dot_syntax_of(property)}")
         raise ValidationError.new("Please setup the #{speech_syntax_of(property)} in config file.") if val.nil?
         val
       end
+    end
+
+    def fetch_command!(plugin)
+      validate_name_of(plugin)
+      validate_script_of(plugin)
+
+      load!.plugins[plugin].command
     end
 
     private
@@ -50,6 +57,14 @@ module Logman
       elements = name.split('_')
       return name unless elements.size > 1
       elements.join(' ')
+    end
+
+    def validate_name_of(plugin)
+      raise ValidationError.new("Please setup a valid plugin name.") unless load!.plugins.key?(plugin)
+    end
+
+    def validate_script_of(plugin)
+      raise ValidationError.new("Please setup a valid plugin command.") if load!.plugins[plugin].command.empty?
     end
   end
 end
