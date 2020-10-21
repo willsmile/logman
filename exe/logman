@@ -19,7 +19,7 @@ opts = OptionParser.new do |opts|
   opts.on('-c', '--config FILE', 'Use a config file') { |v| @options[:config] = v }
   opts.on('-g', '--generate', 'Generate a log') { |v| @options[:generate] = v }
   opts.on('-o', '--open', 'Open generated log') { |v| @options[:open] = v }
-  opts.on('-p', '--plugin', 'Run a plugin') { |v| @options[:plugin] = v }
+  opts.on('-p', '--plugin [NAMES]', 'Run one or multiple plugins', Array) { |v| @options[:plugin] = v }
   opts.on('-e', '--esa', 'Post a log to esa') { |v| @options[:esa] = v }
   opts.on('-s', '--slack', 'Post a log to slack') { |v| @options[:slack] = v }
   opts.on('-v', '--version', 'Show tool version') { |v| @options[:version] = v }
@@ -44,6 +44,7 @@ plugin_manager = Logman::PluginManager.new(config)
   when :slack
     post.slack(log)
   when :plugin
+    v.each { |c| plugin_manager.execute(c) } unless v.nil?
   when *NON_OPERATIONAL_OPTS
     # Do nothing here
   else
