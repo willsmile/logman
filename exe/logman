@@ -9,13 +9,14 @@ require 'optparse'
 
 LOGMANPATH = ENV.fetch("LOGMANPATH")
 CONFIG_FILENAME = 'config.yml'
+NON_OPERATIONAL_OPTS = [:config]
 
 # default value
 config_path = LOGMANPATH + '/' + CONFIG_FILENAME
 @options = {}
 
-OptionParser.new do |opts|
-  opts.on('-c', '--config', 'Use a config file') { |v| config_path = v }
+opts = OptionParser.new do |opts|
+  opts.on('-c', '--config FILE', 'Use a config file') { |v| @options[:config] = v }
   opts.on('-g', '--generate', 'Generate a log') { |v| @options[:generate] = v }
   opts.on('-o', '--open', 'Open generated log') { |v| @options[:open] = v }
   opts.on('-p', '--plugin', 'Run a plugin') { |v| @options[:plugin] = v }
@@ -26,6 +27,7 @@ OptionParser.new do |opts|
   opts.parse!(ARGV)
 end
 
+config_path = @options[:config] if @options.has_key?(:config)
 config = Logman::Config.new(config_path)
 log = Logman::LogObject.new(config)
 post = Logman::Post.new(config)
@@ -42,7 +44,8 @@ plugin_manager = Logman::PluginManager.new(config)
   when :slack
     post.slack(log)
   when :plugin
-    plugin_manager.execute(v)
+  when *NON_OPERATIONAL_OPTS
+    # Do nothing here
   else
     Logman.version
   end
