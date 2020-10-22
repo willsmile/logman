@@ -38,9 +38,9 @@ module Logman
       end
     end
 
-    def fetch_command!(plugin)
-      validate_name_of(plugin)
-      validate_script_of(plugin)
+    def fetch_plugin_command!(plugin)
+      validate_plugin(plugin)
+      validate_command(plugin)
 
       load!.plugins[plugin].command
     end
@@ -59,12 +59,12 @@ module Logman
       elements.join(' ')
     end
 
-    def validate_name_of(plugin)
-      raise ValidationError.new("Please setup a valid plugin name.") unless load!.plugins.key?(plugin)
+    def validate_plugin(plugin_name)
+      raise ValidationError.new("Please setup a valid plugin name.") unless load!.plugins.key?(plugin_name)
     end
 
-    def validate_script_of(plugin)
-      raise ValidationError.new("Please setup a valid plugin command.") if load!.plugins[plugin].command.empty?
+    def validate_command(plugin_name)
+      raise ValidationError.new("Please setup a valid plugin command.") if load!.plugins[plugin_name].command.empty?
     end
   end
 end
