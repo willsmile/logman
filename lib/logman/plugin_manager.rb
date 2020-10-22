@@ -7,7 +7,7 @@ module Logman
     end
 
     def execute(plugin)
-      command = @config.fetch_command!(plugin)
+      command = @config.fetch_plugin_command!(plugin)
       system("#{command}", exception: true)
     end
   end
